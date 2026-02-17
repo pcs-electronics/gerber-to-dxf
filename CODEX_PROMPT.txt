@@ -1,0 +1,55 @@
+You are editing this project:
+- Script: gerber-to-dxf.py
+- Documentation: README.md
+
+Project purpose:
+- Generate one DXF file from fabrication files in the current folder.
+- Output file format: <project>-outline-mounting-holes.dxf
+- DXF layers:
+  - OUTLINE: board profile from edge-cuts Gerber geometry
+  - MOUNTING_HOLES: selected drill holes as CIRCLE entities
+
+Current behavior requirements:
+1. Auto-detect input files:
+- Edge profile: *-Edge_Cuts.gbr, with profile fallback detection for other .gbr files.
+- Drill files: *-PTH.drl and *-NPTH.drl when present.
+
+2. Geometry handling:
+- Preserve board outline geometry from Gerber (LINE/ARC).
+- Read source units correctly (inch/mm) and write DXF in millimeters.
+- Keep original coordinate orientation from fabrication files.
+
+3. Hole filtering CLI:
+- Use command-line flags:
+  - --min : minimum drill diameter in mm (default: 3.0)
+  - --max : maximum drill diameter in mm (default: none / no maximum)
+- Validate:
+  - --min >= 0
+  - --max >= 0 when provided
+  - --max >= --min when provided
+
+4. Runtime output:
+- On normal run, script prints command-line help text and then summary:
+  - output filename
+  - outline entity count
+  - hole count using active filter
+  - diameters used
+
+5. Documentation sync:
+- If behavior or parameters change, update README.md in the same commit.
+- README must include Windows/macOS/Linux usage examples.
+- Keep note: tested with KiCad 9.0.
+- Keep note at the end that work was AI generated.
+
+Editing rules for future Codex runs:
+- Make focused, minimal edits; do not rewrite unrelated logic.
+- Preserve existing file naming conventions unless explicitly requested.
+- After edits, run quick checks:
+  - python3 gerber-to-dxf.py --help
+  - python3 gerber-to-dxf.py (or with sample --min/--max)
+- Report what changed and reference exact files.
+
+Task template for next changes:
+"Update gerber-to-dxf.py to [requested change].
+Keep CLI defaults as --min=3.0 and --max unset unless I explicitly ask otherwise.
+Update README.md to match behavior and verify with a quick command run."
