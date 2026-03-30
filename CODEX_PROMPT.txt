@@ -1,22 +1,26 @@
 You are editing this project:
 - Script: gerber-to-dxf.py
 - Documentation: README.md
+- Prompt notes: CODEX_PROMPT.txt
 
 Project purpose:
 - Generate one DXF file from fabrication files in the current folder.
 - Output file format: <project>-outline-mounting-holes.dxf
 - DXF layers:
-  - OUTLINE: board profile from edge-cuts Gerber geometry
+  - OUTLINE: board profile from the detected outline/profile Gerber geometry
   - MOUNTING_HOLES: selected drill holes as CIRCLE entities
 
 Current behavior requirements:
 1. Auto-detect input files:
-- Edge profile: *-Edge_Cuts.gbr, with profile fallback detection for other .gbr files.
-- Drill files: *-PTH.drl and *-NPTH.drl when present.
+- Edge profile: *-Edge_Cuts.gbr, with fallback detection for RS-274X profile Gerbers and P-CAD Gerbers that contain an embedded %LNBoard*% layer.
+- Drill files: *-PTH.drl, *-NPTH.drl, or generic .drl / .DRL files when present.
 
 2. Geometry handling:
 - Preserve board outline geometry from Gerber (LINE/ARC).
+- Honor modal Gerber D01 / D02 / D03 state, not only explicit D-codes repeated on every coordinate line.
+- For P-CAD Board-layer input, read the Board layer only and ignore unrelated copper / silk / annotation geometry.
 - Read source units correctly (inch/mm) and write DXF in millimeters.
+- Support zero-suppressed drill coordinates, using Gerber numeric format hints when drill files do not declare enough coordinate format detail.
 - Keep original coordinate orientation from fabrication files.
 
 3. Hole filtering CLI:
@@ -36,9 +40,10 @@ Current behavior requirements:
   - diameters used
 
 5. Documentation sync:
-- If behavior or parameters change, update README.md in the same commit.
+- If behavior or parameters change, update README.md and CODEX_PROMPT.txt in the same commit.
 - README must include Windows/macOS/Linux usage examples.
-- Keep note: tested with KiCad 9.0.
+- README output notes must match the current runtime behavior, including the help text printed before the summary.
+- Keep notes that the script is tested with KiCad 9.0 and P-CAD 2004 RS-274-D output.
 - Keep note at the end that work was AI generated.
 
 Editing rules for future Codex runs:
@@ -52,4 +57,4 @@ Editing rules for future Codex runs:
 Task template for next changes:
 "Update gerber-to-dxf.py to [requested change].
 Keep CLI defaults as --min=3.0 and --max unset unless I explicitly ask otherwise.
-Update README.md to match behavior and verify with a quick command run."
+Update README.md and CODEX_PROMPT.txt to match behavior and verify with a quick command run."
